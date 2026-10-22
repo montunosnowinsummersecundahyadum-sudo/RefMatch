@@ -1,5 +1,10 @@
 # RefMatch
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="brand/logos/refmatch-primary.svg">
+  <img src="brand/logos/refmatch-dark.svg" alt="RefMatch" width="360">
+</picture>
+
 **Explainable referee assignment before kickoff.**
 
 RefMatch is a pre-match analytics agent concept for the *Inside the Game: Developer Hackathon (Microsoft × Premier League)*. It combines team playing styles, referee profiles, fixture context, and assignment constraints to recommend suitable referees and explain the reasoning behind each recommendation.
@@ -10,7 +15,32 @@ The core question: **Which available referee is the best fit for this fixture, a
 
 ## Project status
 
-RefMatch is in the planning stage. This repository contains the [skill specification](RefMatchSKILL.md) and [architecture diagram](docs/refmatch_architecture.png). The capabilities below describe the intended system; application code, runnable setup, and scoring formulas have not yet been implemented.
+The RefMatch product is in the planning stage. This repository contains the [landing page](index.html), [skill specification](RefMatchSKILL.md), [architecture diagram](docs/refmatch_architecture.png), a [visual identity and reusable theme](brand/README.md), and a [15-second concept film](video/refmatch-15s.mp4). The product capabilities below describe the intended system; the scoring service and product application have not yet been implemented. The hackathon demo will build on the existing web UI, use a deterministic local scoring module and templated explanations, and keep authentication, persistence, and external data integrations out of scope.
+
+## Landing page
+
+The responsive landing page introduces RefMatch, explains the workflow, embeds the 15-second film, and includes an interactive synthetic shortlist. Visitors can inspect referee profiles or make Referee A unavailable to see Referee B move to the top. All displayed scores are fixed illustrative values.
+
+The founder section introduces **Mohammed Roqa**, with his portrait, professional background, and website, LinkedIn, and email links sourced from [mroqa.site](https://mroqa.site/). The landing page uses the shared RefMatch logo, palette, and fonts. Its editable files are [index.html](index.html), [site.css](site.css), and [site.js](site.js).
+
+```sh
+npm run preview
+```
+
+Open **http://127.0.0.1:4173/**. The preview requires Node.js and npm and works without dependency installation. The page can also be served as static files; no application backend is required. Contact links open the visitor's email client.
+
+## Brand and concept film
+
+[![Watch the 15-second RefMatch film](video/refmatch-poster.png)](video/refmatch-15s.mp4)
+
+The visual identity combines a pitch outline, central referee, and fit check with midnight blue and bright mint. The film shows the journey from match profiles to ranked referees and an explained recommendation, using illustrative synthetic data.
+
+- [Logo assets and brand guidelines](brand/README.md)
+- [Reusable CSS theme](brand/theme.css) and [JSON design tokens](brand/tokens.json)
+- [1080p film with original sound](video/refmatch-15s.mp4)
+- [Storyboard, animation source, and render instructions](video/README.md)
+
+The same preview server exposes **http://127.0.0.1:4173/brand/** for the identity showcase and **http://127.0.0.1:4173/video/** for the editable animation.
 
 ## Planned capabilities
 
@@ -21,15 +51,23 @@ RefMatch is in the planning stage. This repository contains the [skill specifica
 - Generate a pre-match officiating briefing for fans and broadcasters.
 - Recalculate rankings when constraints change, such as a referee becoming unavailable.
 
+## Hackathon demo work areas
+
+1. **Deterministic scoring and rules engine:** calculate the fixture's Match Risk Profile, apply hard eligibility filters before scoring, apply documented soft penalties, and return ranked fit scores with traceable factor values. Eligibility and fit remain separate; a strong score cannot override an exclusion.
+2. **Synthetic data design and curation:** create a small, internally consistent set of fictional fixtures, teams and playing-style metrics, rivalry and history signals, and referee profiles. Include availability, neutrality, rest, and explicit conflict fields. Label all example data and results as synthetic; do not imply real Premier League performance.
+3. **Interactive web UI integration:** connect the existing HTML/CSS/JavaScript interface to the scoring module. Display the ranked shortlist, each referee's rationale and caveat, and re-rank interactively when the user changes availability with “What if unavailable?”.
+
+For this demo, explanations are templates based on the actual scoring factors and rule outcomes; a live language model is not required. The demo uses no real-world dataset.
+
 ## Architecture
 
 ![RefMatch architecture showing inputs, the profile and risk engine, fit scoring and ranking, Laws of the Game context, and the explanation agent's three outputs.](docs/refmatch_architecture.png)
 
 [Open the full architecture diagram](docs/refmatch_architecture.png).
 
-Four input groups feed the **profile and risk engine**: team profiles, referee profiles, fixture context, and constraints. The **fit scoring and ranking** stage identifies the top three eligible referees. The **explanation agent** combines those rankings with a separate source of **Laws of the Game** context to produce ranked recommendations, pre-match briefings, and what-if explanations.
+Four input groups feed the **profile and risk engine**: team profiles, referee profiles, fixture context, and constraints. The **fit scoring and ranking** stage identifies the top three eligible referees. The **explanation agent** combines those rankings with a separate source of **Laws of the Game** context to produce ranked recommendations, pre-match briefings, and what-if explanations. This is the proposed broader architecture; the hackathon demo scope is the local deterministic engine and templated explanations described above.
 
-The scoring service calculates deterministic numeric results. Azure OpenAI provides plain-language explanations of those results. A what-if change returns to constraint filtering, scoring, and ranking before the explanation is updated.
+The scoring service calculates deterministic numeric results. In the demo, explanation templates present those results without changing them. A what-if change returns to constraint filtering, scoring, and ranking before the explanation is updated.
 
 ## Assignment workflow
 

@@ -1,0 +1,16 @@
+{
+  "name": "refmatch-brand",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RefMatch visual identity, reusable theme, and fifteen-second motion film",
+  "type": "module",
+  "scripts": {
+    "preview": "node scripts/preview.mjs",
+    "render": "node scripts/render.mjs",
+    "render:stills": "node scripts/render.mjs --stills",
+    "assets": ".venv/bin/python scripts/build-brand.py"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}

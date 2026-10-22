@@ -29,6 +29,16 @@ All data is **synthetic**. Never present outputs as real referee evaluations or 
 
 Keep scoring deterministic and numeric. Use the language model only to explain results, never to invent scores.
 
+## Hackathon demo implementation priorities
+
+The demo is a simple interactive web app built on the repository's existing HTML/CSS/JavaScript UI. Its essential work areas are:
+
+1. **Deterministic scoring and rules engine:** calculate match risk dimensions, apply hard eligibility filters, apply documented soft penalties, and rank eligible referees by fit. Keep eligibility separate from fit so a high score never overrides an exclusion.
+2. **Synthetic data design and curation:** use a small, internally consistent set of fictional fixtures, teams and playing-style metrics, rivalry/history signals, and referee profiles. Include availability, neutrality, rest, and explicit conflict fields. Label all data and outputs as synthetic; do not imply real Premier League performance.
+3. **Interactive UI integration:** connect the existing interface to the scoring module, show the ranked shortlist and each referee's rationale and caveat, and re-rank when availability changes.
+
+Generate explanations with templates grounded in the actual score factors and rule outcomes; a live language model is not required for the demo. Authentication, persistence, and external data integrations are out of scope.
+
 ## Input schema
 
 **Team profile** (per team, 0-100 unless noted)
@@ -111,6 +121,6 @@ When a constraint changes, re-run steps 3-6 and report:
 - Do not present fit scores as predictions of match outcomes.
 - If inputs are too sparse to rank meaningfully, say so and ask for the missing fields.
 
-## Suggested stack
+## Demo stack
 
-Python scoring service (Azure Functions) for risk and fit; Azure OpenAI for explanations and briefings; Azure AI Search for Laws of the Game retrieval; simple web front end.
+Use the existing HTML/CSS/JavaScript frontend with a deterministic local scoring module and templated explanations. Keep the scorer independent of the UI so its rules and outputs can be tested directly. The Azure Functions, Azure OpenAI, and Azure AI Search components shown in the broader proposed architecture are not required for this demo.
